@@ -70,7 +70,14 @@ app.get("/restaurants", (req, res) => {
 
 app.get("/restaurant/:id", (req, res) => {
   const restaurantId = req.params.id;
-  res.render("restaurant-detail", { restaurantId: restaurantId });
+  const theRestaurant = readRestaurants().filter((aRestaurant) => {
+    return aRestaurant.id === restaurantId;
+  });
+  if (theRestaurant.length === 1) {
+    res.render("restaurant-detail", { restaurant: theRestaurant[0] });
+  } else {
+    res.send("<p>I couldn't find the restaurant and now I'm dead!</p>");
+  }
 });
 
 app.listen(3000);

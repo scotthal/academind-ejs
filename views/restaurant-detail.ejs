@@ -7,10 +7,10 @@
   <body>
     <%- include("includes/header") %> <%- include("includes/mobile-drawer") %>
     <main>
-      <h1>RESTAURANT NAME <%= restaurantId %></h1>
-      <p>Cuisine | Address</p>
-      <p>Description</p>
-      <p><a href="">View Web Site</a></p>
+      <h1><%= restaurant.name %></h1>
+      <p><%= restaurant.cuisine %> | <%= restaurant.address %></p>
+      <p><%= restaurant.description %></p>
+      <p><a href="<%= restaurant.website %>">View Web Site</a></p>
     </main>
   </body>
 </html>
