@@ -24,17 +24,26 @@ app.get("/recommend", (req, res) => {
   res.render("recommend");
 });
 
+const readRestaurants = () => {
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, "data", "restaurants.json"))
+  );
+};
+
 app.post("/recommend", (req, res) => {
   const restaurant = req.body;
-  const filePath = path.join(__dirname, "data", "restaurants.json");
-  const restaurants = JSON.parse(fs.readFileSync(filePath));
+  const restaurants = readRestaurants();
   restaurants.push(restaurant);
   fs.writeFileSync(filePath, JSON.stringify(restaurants));
   res.redirect("/confirm");
 });
 
 app.get("/restaurants", (req, res) => {
-  res.render("restaurants");
+  const restaurants = readRestaurants();
+  res.render("restaurants", {
+    numberOfRestaurants: restaurants.length,
+    restaurants: restaurants,
+  });
 });
 
 app.listen(3000);
