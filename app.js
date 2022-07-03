@@ -38,7 +38,10 @@ app.post("/recommend", (req, res) => {
   const restaurant = req.body;
   const restaurants = readRestaurants();
   restaurants.push(restaurant);
-  fs.writeFileSync(filePath, JSON.stringify(restaurants));
+  fs.writeFileSync(
+    path.join(__dirname, "data", "restaurants.json"),
+    JSON.stringify(restaurants)
+  );
   res.redirect("/confirm");
 });
 
