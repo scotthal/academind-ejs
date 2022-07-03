@@ -41,7 +41,10 @@ app.post("/recommend", (req, res) => {
   restaurant.id = uuid.v4();
   const restaurants = readRestaurants();
   restaurants.push(restaurant);
-  fs.writeFileSync(filePath, JSON.stringify(restaurants));
+  fs.writeFileSync(
+    path.join(__dirname, "data", "restaurants.json"),
+    JSON.stringify(restaurants)
+  );
   res.redirect("/confirm");
 });
 
