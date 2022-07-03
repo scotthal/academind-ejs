@@ -8,6 +8,10 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 
+app.get("/favicon.ico", (req, res) => {
+  res.type("image/x-icon").send();
+});
+
 app.get("/", (req, res) => {
   res.render("index");
 });
