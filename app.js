@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
+
 const express = require("express");
+const uuid = require("uuid");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -36,10 +38,23 @@ const readRestaurants = () => {
 
 app.post("/recommend", (req, res) => {
   const restaurant = req.body;
+  restaurant.id = uuid.v4();
   const restaurants = readRestaurants();
   restaurants.push(restaurant);
   fs.writeFileSync(filePath, JSON.stringify(restaurants));
   res.redirect("/confirm");
+});
+
+app.get("/backfill-ids", (req, res) => {
+  const restaurants = readRestaurants();
+  for (const restaurant of restaurants) {
+    restaurant.id = uuid.v4();
+  }
+  fs.writeFileSync(
+    path.join(__dirname, "data", "restaurants.json"),
+    JSON.stringify(restaurants)
+  );
+  res.send("<p>Backfill complete</p>");
 });
 
 app.get("/restaurants", (req, res) => {
