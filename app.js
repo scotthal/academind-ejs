@@ -80,4 +80,8 @@ app.get("/restaurant/:id", (req, res) => {
   }
 });
 
+app.use((req, res) => {
+  res.status(404).render("404");
+});
+
 app.listen(3000);
