@@ -50,4 +50,9 @@ app.get("/restaurants", (req, res) => {
   });
 });
 
+app.get("/restaurant/:id", (req, res) => {
+  const restaurantId = req.params.id;
+  res.render("restaurant-detail", { restaurantId: restaurantId });
+});
+
 app.listen(3000);
