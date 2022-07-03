@@ -76,7 +76,7 @@ app.get("/restaurant/:id", (req, res) => {
   if (theRestaurant.length === 1) {
     res.render("restaurant-detail", { restaurant: theRestaurant[0] });
   } else {
-    res.send("<p>I couldn't find the restaurant and now I'm dead!</p>");
+    res.status(404).render("404");
   }
 });
 
