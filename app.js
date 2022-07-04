@@ -4,6 +4,8 @@ const path = require("path");
 const express = require("express");
 const uuid = require("uuid");
 
+const storage = require("./storage");
+
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -30,38 +32,26 @@ app.get("/recommend", (req, res) => {
   res.render("recommend");
 });
 
-const readRestaurants = () => {
-  return JSON.parse(
-    fs.readFileSync(path.join(__dirname, "data", "restaurants.json"))
-  );
-};
-
 app.post("/recommend", (req, res) => {
   const restaurant = req.body;
   restaurant.id = uuid.v4();
-  const restaurants = readRestaurants();
+  const restaurants = storage.readRestaurants();
   restaurants.push(restaurant);
-  fs.writeFileSync(
-    path.join(__dirname, "data", "restaurants.json"),
-    JSON.stringify(restaurants)
-  );
+  storage.writeRestaurants(restaurants);
   res.redirect("/confirm");
 });
 
 app.get("/backfill-ids", (req, res) => {
-  const restaurants = readRestaurants();
+  const restaurants = storage.readRestaurants();
   for (const restaurant of restaurants) {
     restaurant.id = uuid.v4();
   }
-  fs.writeFileSync(
-    path.join(__dirname, "data", "restaurants.json"),
-    JSON.stringify(restaurants)
-  );
+  storage.writeRestaurants(restaurants);
   res.send("<p>Backfill complete</p>");
 });
 
 app.get("/restaurants", (req, res) => {
-  const restaurants = readRestaurants();
+  const restaurants = storage.readRestaurants();
   res.render("restaurants", {
     numberOfRestaurants: restaurants.length,
     restaurants: restaurants,
@@ -70,7 +60,7 @@ app.get("/restaurants", (req, res) => {
 
 app.get("/restaurant/:id", (req, res) => {
   const restaurantId = req.params.id;
-  const theRestaurant = readRestaurants().filter((aRestaurant) => {
+  const theRestaurant = storage.readRestaurants().filter((aRestaurant) => {
     return aRestaurant.id === restaurantId;
   });
   if (theRestaurant.length === 1) {
