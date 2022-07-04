@@ -36,9 +36,23 @@ router.get("/backfill-ids", (req, res) => {
 
 router.get("/restaurants", (req, res) => {
   const restaurants = storage.readRestaurants();
+  let order = parseInt(req.query.order);
+  if (order !== 1 && order !== -1) {
+    order = 1;
+  }
+  restaurants.sort((a, b) => {
+    if (a.name > b.name) {
+      return order * 1;
+    } else if (a.name < b.name) {
+      return order * -1;
+    } else {
+      return 0;
+    }
+  });
   res.render("restaurants", {
     numberOfRestaurants: restaurants.length,
     restaurants: restaurants,
+    order: order * -1,
   });
 });
 
